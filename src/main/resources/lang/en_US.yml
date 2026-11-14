@@ -1,0 +1,73 @@
+# BasicCmd language file (English)
+# All texts use MiniMessage. Colors, bolding and clickable buttons are edited here, no code change needed.
+# Common tags: <red> <green> <yellow> <aqua> <gray> <gold> <bold> <italic> <underlined>
+# Hex colors: #RRGGBB e.g. <#ff8800>
+# Placeholders use braces, e.g. {player} {home} {seconds}
+
+prefix: "<gray>[<aqua>BasicCmd</aqua>]</gray> "
+
+general:
+  player-only: "<red>This command can only be used by a player.</red>"
+  no-permission: "<red>You do not have permission to do that.</red>"
+  player-not-found: "<red>Player <yellow>{player}</yellow> was not found.</red>"
+  cooldown: "<red>On cooldown, please wait <yellow>{seconds}</yellow>s.</red>"
+  reloaded: "<green>Configuration and language files reloaded.</green>"
+  usage-admin: "<gray>Usage: <yellow>/basiccmd [reload]</yellow></gray>"
+  version: "<gray>{version}</gray>"
+
+home:
+  set: "<green>Home <yellow>{home}</yellow> has been set.</green>"
+  set-overwrite: "<green>Home <yellow>{home}</yellow> has been updated.</green>"
+  limit: "<red>You reached the home limit (<yellow>{limit}</yellow>). Delete one with <yellow>/delhome</yellow> first.</red>"
+  deleted: "<green>Home <yellow>{home}</yellow> has been deleted.</green>"
+  not-found: "<red>You have no home named <yellow>{home}</yellow>.</red>"
+  invalid-name: "<red>Invalid name: only letters, digits, underscore and dash, up to 16 characters.</red>"
+  teleporting: "<gray>Teleporting to home <yellow>{home}</yellow>...</gray>"
+  invalid-world: "<red>The world of home <yellow>{home}</yellow> no longer exists.</red>"
+  list-header: "<aqua>Your homes (<yellow>{count}</yellow>/<yellow>{limit}</yellow>):</aqua>"
+  list-empty: "<gray>You have no homes yet. Use <yellow>/sethome</yellow> to create one.</gray>"
+  list-item: "<gray> - <yellow>{home}</yellow> <dark_gray>({world} {x}, {y}, {z})</dark_gray></gray>"
+  usage-delhome: "<red>Usage: <yellow>/delhome &lt;name&gt;</yellow></red>"
+  cross-world-denied: "<red>Home <yellow>{home}</yellow> is in another world ({world}), cross-world teleport is disabled.</red>"
+
+tpa:
+  self: "<red>You cannot use this on yourself.</red>"
+  usage: "<red>Usage: <yellow>/tpa &lt;player&gt;</yellow></red>"
+  usage-tph: "<red>Usage: <yellow>/tph &lt;player&gt;</yellow></red>"
+  sent: "<green>Teleport request sent to <yellow>{player}</yellow>.</green>"
+  sent-tph: "<green>Requested <yellow>{player}</yellow> to teleport to you.</green>"
+  received: "<yellow>{player}</yellow> <green>wants to teleport to you.</green> <click:run_command:'/tpaccept {player}'><hover:show_text:'Click to accept'><aqua>[Accept]</aqua></hover></click> <click:run_command:'/tpdeny {player}'><hover:show_text:'Click to deny'><red>[Deny]</red></hover></click>"
+  received-tph: "<yellow>{player}</yellow> <green>wants you to teleport to them.</green> <click:run_command:'/tpaccept {player}'><hover:show_text:'Click to accept'><aqua>[Accept]</aqua></hover></click> <click:run_command:'/tpdeny {player}'><hover:show_text:'Click to deny'><red>[Deny]</red></hover></click>"
+  accepted: "<green>Accepted the request from <yellow>{player}</yellow>.</green>"
+  accepted-target: "<green><yellow>{player}</yellow> accepted your teleport request.</green>"
+  accepted-tph: "<green>Accepted the request from <yellow>{player}</yellow>, you are being moved to them.</green>"
+  accepted-tph-target: "<green><yellow>{player}</yellow> accepted your request and is coming over.</green>"
+  accepted-tph-pulled: "<green>You were pulled to <yellow>{player}</yellow>.</green>"
+  denied: "<red>Denied the request from <yellow>{player}</yellow>.</red>"
+  denied-target: "<red><yellow>{player}</yellow> denied your request.</red>"
+  expired: "<red>The request from <yellow>{player}</yellow> has expired.</red>"
+  none: "<red>You have no pending request from <yellow>{player}</yellow>.</red>"
+  no-pending: "<red>You have no pending teleport requests.</red>"
+  cross-world-denied: "<red>Cross-world teleport with <yellow>{player}</yellow> is not allowed.</red>"
+
+teleport:
+  countdown: "<gray>Teleporting in <yellow>{seconds}</yellow>s, do not move.</gray>"
+  cancelled-move: "<red>Teleport cancelled: you moved.</red>"
+  cancelled-damage: "<red>Teleport cancelled: you took damage.</red>"
+  failed: "<red>Teleport failed, destination unreachable.</red>"
+
+rtp:
+  searching: "<gray>Looking for a safe spot...</gray>"
+  success: "<green>Teleported to <yellow>{x}, {y}, {z}</yellow> ({world}).</green>"
+  failed: "<red>Could not find a safe spot, try again later.</red>"
+  blacklisted: "<red>Random teleport is disabled in this world.</red>"
+
+spawn:
+  teleporting: "<gray>Teleporting to the world spawn ({world})...</gray>"
+  main-world-missing: "<red>Configured main world <yellow>{world}</yellow> does not exist.</red>"
+
+back:
+  teleporting: "<gray>Returning to your last position ({world})...</gray>"
+  none: "<red>There is no position to return to.</red>"
+  world-gone: "<red>The world of your last position no longer exists.</red>"
+  death-recorded: "<gray>Your death location was recorded, use <yellow>/back</yellow> to return.</gray>"

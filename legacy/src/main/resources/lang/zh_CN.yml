@@ -1,0 +1,71 @@
+# BasicCmd legacy 语言文件（简体中文）
+# legacy 线使用 & 传统色码（1.7.10 – 1.16.4 没有 Adventure / MiniMessage）
+# 占位符用大括号，例如 {player} {home} {seconds}
+
+prefix: "&8[&bBasicCmd&8] &r"
+
+general:
+  player-only: "&c该命令只能由玩家执行。"
+  no-permission: "&c你没有权限执行该命令。"
+  player-not-found: "&c找不到玩家 &e{player}&c。"
+  cooldown: "&c命令冷却中，请等待 &e{seconds}&c 秒。"
+  reloaded: "&a配置与语言文件已重新加载。"
+  usage-admin: "&7用法：&e/basiccmd [reload]"
+  version: "&7{version}"
+
+home:
+  set: "&a已设置家 &e{home}&a。"
+  set-overwrite: "&a已更新家 &e{home}&a 的位置。"
+  limit: "&c你已达到家的上限（&e{limit}&c 个），请先用 &e/delhome&c 删除一个。"
+  deleted: "&a已删除家 &e{home}&a。"
+  not-found: "&c你没有名为 &e{home}&c 的家。"
+  invalid-name: "&c名字不合法：只能用字母、数字、下划线或短横线，最长 16 个字符。"
+  teleporting: "&7正在传送到家 &e{home}&7……"
+  invalid-world: "&c家 &e{home}&c 所在的世界已不存在。"
+  cross-world-denied: "&c家 &e{home}&c 位于其他世界（{world}），当前不允许跨世界传送。"
+  list-header: "&b你的家（&e{count}&b/&e{limit}&b）："
+  list-empty: "&7你还没有设置任何家，使用 &e/sethome&7 创建一个。"
+  list-item: "&7 - &e{home} &8({world} {x}, {y}, {z})"
+  usage-delhome: "&c用法：&e/delhome <名字>"
+
+tpa:
+  self: "&c不能对自己使用该命令。"
+  usage: "&c用法：&e/tpa <玩家>"
+  usage-tph: "&c用法：&e/tph <玩家>"
+  sent: "&a已向 &e{player}&a 发送传送请求，等待对方处理。"
+  sent-tph: "&a已请求 &e{player}&a 传送到你身边，等待对方处理。"
+  received: "&e{player} &a请求传送到你身边，输入 &f/tpaccept {player}&a 接受，&f/tpdeny {player}&a 拒绝。"
+  received-tph: "&e{player} &a请求你传送到他身边，输入 &f/tpaccept {player}&a 接受，&f/tpdeny {player}&a 拒绝。"
+  accepted: "&a已接受 &e{player}&a 的请求。"
+  accepted-target: "&e{player} &a接受了你的传送请求。"
+  accepted-tph: "&a已接受 &e{player}&a 的请求，你正被传送到对方身边。"
+  accepted-tph-target: "&e{player} &a接受了你的请求，正在传送过来。"
+  accepted-tph-pulled: "&a你已被 &e{player}&a 传送到身边。"
+  denied: "&c你拒绝了 &e{player}&c 的请求。"
+  denied-target: "&e{player} &c拒绝了你的请求。"
+  expired: "&c来自 &e{player}&c 的请求已过期。"
+  none: "&c你当前没有来自 &e{player}&c 的待处理请求。"
+  no-pending: "&c你当前没有待处理的传送请求。"
+  cross-world-denied: "&c不能与 &e{player}&c 跨世界传送。"
+
+teleport:
+  countdown: "&7传送将在 &e{seconds}&7 秒后开始，请勿移动。"
+  cancelled-move: "&c传送已取消：你移动了位置。"
+  cancelled-damage: "&c传送已取消：你受到了伤害。"
+  failed: "&c传送失败，目标位置不可达。"
+
+spawn:
+  teleporting: "&7正在传送到世界出生点（{world}）……"
+  main-world-missing: "&c配置的主世界 &e{world}&c 不存在。"
+
+back:
+  teleporting: "&7正在返回上一个位置（{world}）……"
+  none: "&c没有可返回的位置。"
+  world-gone: "&c返回点所在的世界已不存在。"
+  death-recorded: "&7已记录你的死亡位置，可使用 &e/back&7 返回。"
+
+rtp:
+  searching: "&7正在寻找安全落点……"
+  success: "&a已随机传送到 &e{x}, {y}, {z}&a（{world}）。"
+  failed: "&c附近找不到安全落点，请稍后再试。"
+  blacklisted: "&c当前世界不允许随机传送。"

@@ -1,0 +1,79 @@
+name: BasicCommands
+version: '${version}'
+main: yhjm1208.basiccommands.BasicCommands
+api-version: '${apiVersion}'
+description: 基础命令插件 —— 家、TPA/TPH、spawn、back、随机传送
+authors: [dsh-test]
+
+commands:
+  sethome:
+    description: 设置一个家
+    usage: /sethome [名字]
+  delhome:
+    description: 删除一个家
+    usage: /delhome <名字>
+  home:
+    description: 传送到家
+    usage: /home [名字]
+  homes:
+    description: 列出所有家
+    usage: /homes
+  tpa:
+    description: 请求传送到某位玩家
+    usage: /tpa <玩家>
+  tph:
+    description: 请求某位玩家传送到你身边
+    usage: /tph <玩家>
+  tpaccept:
+    description: 接受传送请求
+    usage: /tpaccept [玩家]
+  tpdeny:
+    description: 拒绝传送请求
+    usage: /tpdeny [玩家]
+  rtp:
+    description: 随机传送到安全位置
+    usage: /rtp
+  spawn:
+    description: 传送到出生点
+    usage: /spawn
+  back:
+    description: 返回上一个位置
+    usage: /back
+  basiccmd:
+    description: 显示插件版本，或重载配置
+    usage: /basiccmd [reload]
+
+permissions:
+  basiccmd.sethome:
+    description: 允许 /sethome
+    default: true
+  basiccmd.delhome:
+    description: 允许 /delhome
+    default: true
+  basiccmd.home:
+    description: 允许 /home
+    default: true
+  basiccmd.homes:
+    description: 允许 /homes
+    default: true
+  basiccmd.tpa:
+    description: 允许 /tpa
+    default: true
+  basiccmd.tph:
+    description: 允许 /tph
+    default: true
+  basiccmd.rtp:
+    description: 允许 /rtp
+    default: true
+  basiccmd.spawn:
+    description: 允许 /spawn
+    default: true
+  basiccmd.back:
+    description: 允许 /back
+    default: true
+  basiccmd.cooldown.bypass:
+    description: 跳过所有命令冷却
+    default: op
+  basiccmd.reload:
+    description: 允许 /basiccmd reload
+    default: op
