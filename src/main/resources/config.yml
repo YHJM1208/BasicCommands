@@ -1,0 +1,70 @@
+# 语言：zh_CN 或 en_US（对应 lang/<语言>.yml）
+language: zh_CN
+
+homes:
+  # 所有人的家的数量上限（不要分级）
+  limit: 5
+  # 是否允许回其他世界的家；false 时只能回当前世界的家
+  cross-world: true
+
+teleport:
+  # 传送前倒计时秒数，0 = 立即传送
+  countdown-seconds: 3
+  # 倒计时期间移动则取消
+  cancel-on-move: true
+  # 倒计时期间受伤则取消
+  cancel-on-damage: true
+  # 判定为“移动了”的水平距离（格）
+  move-threshold: 0.5
+
+tpa:
+  # 请求有效期（秒）
+  timeout-seconds: 60
+  # tph 是否需要对方同意；false = 直接把对方拉过来
+  tph-requires-accept: true
+  # 是否允许跨世界的 tpa / tph 请求
+  cross-world: true
+
+spawn:
+  # world = 当前世界的出生点（默认）
+  # main  = 固定主世界出生点，任何世界执行都回主世界
+  mode: world
+  # mode=main 时使用哪个世界
+  main-world: world
+
+back:
+  # 返回点的记录方式：
+  #   global    —— 全局共用一个返回点（跨世界，默认）
+  #   per-world —— 每个世界分别记录，/back 只在对应世界生效
+  mode: global
+  # 死亡时记录死亡位置
+  on-death: true
+  # 传送前记录当前位置（/home、/spawn、/rtp、/tpa 等）
+  on-teleport: true
+
+rtp:
+  # 默认距离范围（未被下面单独覆盖的世界使用）
+  default:
+    min-range: 100
+    max-range: 5000
+  # 按世界覆盖默认范围，世界名作为键，示例：
+  # worlds:
+  #   world:
+  #     min-range: 200
+  #     max-range: 3000
+  worlds: {}
+  # 找不到安全落点时的重试次数
+  max-attempts: 16
+  # 禁止随机传送的世界
+  blacklist-worlds:
+    - world_nether
+    - world_the_end
+
+cooldowns:
+  sethome: 3
+  home: 5
+  tpa: 10
+  tph: 10
+  rtp: 60
+  spawn: 5
+  back: 5
