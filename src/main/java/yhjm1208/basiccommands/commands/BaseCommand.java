@@ -1,6 +1,7 @@
 package yhjm1208.basiccommands.commands;
 
 import yhjm1208.basiccommands.BasicCommands;
+import yhjm1208.basiccommands.Features;
 import yhjm1208.basiccommands.Lang;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -31,7 +32,14 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
                 plugin.getLogger().warning("命令 /" + name + " 已被其他插件占用，跳过注册");
                 continue;
             }
-            command.setExecutor(this);
+            command.setExecutor((sender, cmd, label, args) -> {
+                // 功能总开关：命令保留，禁用时只回一句提示，不把命令变成未知命令
+                if (!Features.allows(plugin.getConfig(), cmd.getName())) {
+                    lang.send(sender, "general.feature-disabled");
+                    return true;
+                }
+                return this.onCommand(sender, cmd, label, args);
+            });
             command.setTabCompleter(this);
         }
     }

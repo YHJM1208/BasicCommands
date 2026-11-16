@@ -13,6 +13,7 @@ general:
   usage-admin: "&7用法：&e/basiccmd [reload]"
   version: "&7{version}"
   invalid-page: "&c页码无效：请输入 1 到 &e{pages}&c 之间的数字。"
+  feature-disabled: "&c该功能已被管理员禁用。"
 
 home:
   set: "&a已设置家 &e{home}&a。"

@@ -169,6 +169,12 @@ public final class LegacyCommands implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         String name = command.getName().toLowerCase(Locale.ROOT);
+        // 功能总开关：命令保留，禁用时只回一句提示
+        String group = featureGroup(name);
+        if (group != null && !plugin.getConfig().getBoolean("features." + group + ".enabled", true)) {
+            lang.send(sender, "general.feature-disabled");
+            return true;
+        }
         if ("sethome".equals(name)) {
             return sethome(sender, args);
         }
@@ -218,6 +224,35 @@ public final class LegacyCommands implements CommandExecutor, TabCompleter {
             return basiccmd(sender, args);
         }
         return false;
+    }
+
+    /** 命令名 → config.yml 里的功能组；null 表示不受总开关控制（/basiccmd）。 */
+    private static String featureGroup(String name) {
+        switch (name) {
+            case "sethome":
+            case "delhome":
+            case "home":
+            case "homes":
+                return "homes";
+            case "warp":
+            case "warps":
+            case "setwarp":
+            case "delwarp":
+                return "warps";
+            case "tpa":
+            case "tph":
+            case "tpaccept":
+            case "tpdeny":
+                return "tpa";
+            case "spawn":
+                return "spawn";
+            case "back":
+                return "back";
+            case "rtp":
+                return "rtp";
+            default:
+                return null;
+        }
     }
 
     // ------------------------------------------------------------ 家

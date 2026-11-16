@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'com.example'
-version = '1.1.0'
+version = '1.2.0'
 
 // 目标服务端版本：./gradlew jar -Pmc=1.21.11（默认 26.3）
 def mc = (findProperty('mc') ?: '26.3').toString()

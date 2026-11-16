@@ -15,6 +15,7 @@ general:
   usage-admin: "<gray>Usage: <yellow>/basiccmd [reload]</yellow></gray>"
   version: "<gray>{version}</gray>"
   invalid-page: "<red>Invalid page: enter a number between 1 and <yellow>{pages}</yellow>.</red>"
+  feature-disabled: "<red>This feature is disabled by the server administrator.</red>"
 
 home:
   set: "<green>Home <yellow>{home}</yellow> has been set.</green>"

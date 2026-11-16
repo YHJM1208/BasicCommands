@@ -15,6 +15,7 @@ general:
   usage-admin: "<gray>用法：<yellow>/basiccmd [reload]</yellow></gray>"
   version: "<gray>{version}</gray>"
   invalid-page: "<red>页码无效：请输入 1 到 <yellow>{pages}</yellow> 之间的数字。</red>"
+  feature-disabled: "<red>该功能已被管理员禁用。</red>"
 
 home:
   set: "<green>已设置家 <yellow>{home}</yellow>。</green>"

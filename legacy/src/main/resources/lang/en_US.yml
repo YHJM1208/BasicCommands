@@ -13,6 +13,7 @@ general:
   usage-admin: "&7Usage: &e/basiccmd [reload]"
   version: "&7{version}"
   invalid-page: "&cInvalid page: enter a number between 1 and &e{pages}&c."
+  feature-disabled: "&cThis feature is disabled by the server administrator."
 
 home:
   set: "&aHome &e{home}&a has been set."

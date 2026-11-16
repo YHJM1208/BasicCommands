@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'com.example'
-version = '1.1.0'
+version = '1.2.0'
 
 // legacy 线：一份源码同时兼容 1.7.10 – 1.18.1
 // 编译基线用 spigot-api 1.8.8（Java 8），只使用 1.7.10 就存在的 API

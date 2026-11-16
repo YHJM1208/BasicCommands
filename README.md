@@ -8,12 +8,12 @@ Minecraft 基础命令插件：家、地标、TPA/TPH、出生点、返回上一
 
 | 服务端 | 用这个包 | Java |
 |---|---|---|
-| Spigot / CraftBukkit 1.7.10 – 1.18.1 | `BasicCommands-1.1.0-bukkit-1.7.10-1.18.1.jar` | 8+ |
-| Paper 1.18.2 | `BasicCommands-1.1.0-paper-1.18.2.jar` | 17+ |
-| Paper 1.19 – 1.19.4 | `BasicCommands-1.1.0-paper-1.19-1.19.4.jar` | 17+ |
-| Paper 1.20 – 1.20.6 | `BasicCommands-1.1.0-paper-1.20-1.20.6.jar` | 17+ |
-| Paper 1.21 – 1.21.11 | `BasicCommands-1.1.0-paper-1.21-1.21.11.jar` | 21+ |
-| Paper 26.3 | `BasicCommands-1.1.0-paper-26.3.jar` | 25+ |
+| Spigot / CraftBukkit 1.7.10 – 1.18.1 | `BasicCommands-1.2.0-bukkit-1.7.10-1.18.1.jar` | 8+ |
+| Paper 1.18.2 | `BasicCommands-1.2.0-paper-1.18.2.jar` | 17+ |
+| Paper 1.19 – 1.19.4 | `BasicCommands-1.2.0-paper-1.19-1.19.4.jar` | 17+ |
+| Paper 1.20 – 1.20.6 | `BasicCommands-1.2.0-paper-1.20-1.20.6.jar` | 17+ |
+| Paper 1.21 – 1.21.11 | `BasicCommands-1.2.0-paper-1.21-1.21.11.jar` | 21+ |
+| Paper 26.3 | `BasicCommands-1.2.0-paper-26.3.jar` | 25+ |
 
 安装：把 jar 放进服务端 `plugins/`，重启即可。**只装一个**，不要多个包同时放。
 
@@ -58,6 +58,28 @@ Minecraft 基础命令插件：家、地标、TPA/TPH、出生点、返回上一
 ## 配置
 
 配置文件 `plugins/BasicCommands/config.yml`，改完执行 `/basiccmd reload`。
+
+### 功能开关
+
+六组功能各有一个总开关，关掉后**命令还在**，只是执行时统一回一句「该功能已被管理员禁用」：
+
+```yaml
+features:
+  homes:
+    enabled: true    # /sethome /delhome /home /homes
+  warps:
+    enabled: true    # /warp /warps /setwarp /delwarp
+  tpa:
+    enabled: true    # /tpa /tph /tpaccept /tpdeny
+  spawn:
+    enabled: true    # /spawn
+  back:
+    enabled: true    # /back
+  rtp:
+    enabled: true    # /rtp
+```
+
+改完 `/basiccmd reload` 立即生效，不用重启服务器。
 
 ### 家
 

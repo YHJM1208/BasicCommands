@@ -1,6 +1,28 @@
 # 语言：zh_CN 或 en_US（对应 lang/<语言>.yml）
 language: zh_CN
 
+# 功能总开关：false 后该组命令仍然存在，只是执行时直接回复「已被管理员禁用」
+# 改完执行 /basiccmd reload 立即生效，不用重启服务器
+features:
+  # /sethome /delhome /home /homes
+  homes:
+    enabled: true
+  # /warp /warps /setwarp /delwarp
+  warps:
+    enabled: true
+  # /tpa /tph /tpaccept /tpdeny
+  tpa:
+    enabled: true
+  # /spawn
+  spawn:
+    enabled: true
+  # /back
+  back:
+    enabled: true
+  # /rtp
+  rtp:
+    enabled: true
+
 homes:
   # 所有人的家的数量上限（不要分级）
   limit: 5
