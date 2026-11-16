@@ -11,15 +11,18 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
 /**
- * legacy 版数据层：家 + 返回点。
- * 文件格式与新版一致（homes.yml / back.yml），玩家数据可直接沿用。
+ * legacy 版数据层：家 + 地标 + 返回点。
+ * 文件格式与新版一致（homes.yml / warps.yml / back.yml），玩家数据可直接沿用。
  */
 public final class LegacyStore {
 
@@ -74,11 +77,44 @@ public final class LegacyStore {
         }
     }
 
+    public static final class Warp {
+        final String name;
+        final String world;
+        final double x;
+        final double y;
+        final double z;
+        final float yaw;
+        final float pitch;
+
+        Warp(String name, String world, double x, double y, double z, float yaw, float pitch) {
+            this.name = name;
+            this.world = world;
+            this.x = x;
+            this.y = y;
+            this.z = z;
+            this.yaw = yaw;
+            this.pitch = pitch;
+        }
+
+        String name() { return name; }
+        String world() { return world; }
+        double x() { return x; }
+        double y() { return y; }
+        double z() { return z; }
+
+        Location toLocation() {
+            World bukkitWorld = Bukkit.getWorld(world);
+            return bukkitWorld == null ? null : new Location(bukkitWorld, x, y, z, yaw, pitch);
+        }
+    }
+
     private final JavaPlugin plugin;
     private final File homeFile;
     private final File backFile;
+    private final File warpFile;
 
     private final Map<UUID, Map<String, Home>> homes = new HashMap<UUID, Map<String, Home>>();
+    private final Map<String, Warp> warps = new LinkedHashMap<String, Warp>();
     private final Map<UUID, Point> backGlobal = new HashMap<UUID, Point>();
     private final Map<UUID, Map<String, Point>> backWorlds = new HashMap<UUID, Map<String, Point>>();
 
@@ -89,6 +125,7 @@ public final class LegacyStore {
         this.plugin = plugin;
         this.homeFile = new File(plugin.getDataFolder(), "homes.yml");
         this.backFile = new File(plugin.getDataFolder(), "back.yml");
+        this.warpFile = new File(plugin.getDataFolder(), "warps.yml");
     }
 
     // ------------------------------------------------------------ 家
@@ -122,6 +159,45 @@ public final class LegacyStore {
     public synchronized boolean removeHome(UUID id, String name) {
         Map<String, Home> map = homes.get(id);
         if (map == null || map.remove(name) == null) {
+            return false;
+        }
+        markDirty();
+        return true;
+    }
+
+    // ------------------------------------------------------------ 地标
+
+    public synchronized List<Warp> warps() {
+        List<Warp> list = new ArrayList<Warp>(warps.values());
+        Collections.sort(list, new Comparator<Warp>() {
+            @Override
+            public int compare(Warp first, Warp second) {
+                return first.name().compareToIgnoreCase(second.name());
+            }
+        });
+        return list;
+    }
+
+    public synchronized Warp getWarp(String name) {
+        return warps.get(name);
+    }
+
+    public synchronized boolean hasWarp(String name) {
+        return warps.containsKey(name);
+    }
+
+    public synchronized int warpCount() {
+        return warps.size();
+    }
+
+    public synchronized boolean putWarp(Warp warp) {
+        boolean overwritten = warps.put(warp.name(), warp) != null;
+        markDirty();
+        return overwritten;
+    }
+
+    public synchronized boolean removeWarp(String name) {
+        if (warps.remove(name) == null) {
             return false;
         }
         markDirty();
@@ -166,6 +242,7 @@ public final class LegacyStore {
 
     public synchronized void load() {
         homes.clear();
+        warps.clear();
         backGlobal.clear();
         backWorlds.clear();
 
@@ -200,9 +277,26 @@ public final class LegacyStore {
             }
         }
 
+        if (warpFile.exists()) {
+            YamlConfiguration yaml = YamlConfiguration.loadConfiguration(warpFile);
+            ConfigurationSection section = yaml.getConfigurationSection("warps");
+            if (section != null) {
+                for (String rawName : section.getKeys(false)) {
+                    ConfigurationSection node = section.getConfigurationSection(rawName);
+                    if (node == null) {
+                        continue;
+                    }
+                    String name = rawName.toLowerCase(Locale.ROOT);
+                    warps.put(name, new Warp(name,
+                            node.getString("world", "world"),
+                            node.getDouble("x"), node.getDouble("y"), node.getDouble("z"),
+                            (float) node.getDouble("yaw"), (float) node.getDouble("pitch")));
+                }
+            }
+        }
+
         if (backFile.exists()) {
-            YamlConfiguration yaml = YamlConfiguration.loadConfiguration(backFile);
-            ConfigurationSection players = yaml.getConfigurationSection("players");
+            YamlConfiguration yaml = YamlConfiguration.loadConfiguration(backFile);            ConfigurationSection players = yaml.getConfigurationSection("players");
             if (players != null) {
                 for (String rawId : players.getKeys(false)) {
                     UUID id = parseUuid(rawId);
@@ -236,6 +330,7 @@ public final class LegacyStore {
 
     public synchronized void saveNow() {
         saveHomes();
+        saveWarps();
         saveBack();
         dirty = false;
     }
@@ -267,6 +362,26 @@ public final class LegacyStore {
             }
         }
         save(yaml, homeFile);
+    }
+
+    private void saveWarps() {
+        if (warps.isEmpty()) {
+            if (warpFile.exists() && !warpFile.delete()) {
+                plugin.getLogger().warning("无法删除空的 warps.yml");
+            }
+            return;
+        }
+        YamlConfiguration yaml = new YamlConfiguration();
+        for (Warp warp : warps.values()) {
+            String base = "warps." + warp.name();
+            yaml.set(base + ".world", warp.world);
+            yaml.set(base + ".x", warp.x);
+            yaml.set(base + ".y", warp.y);
+            yaml.set(base + ".z", warp.z);
+            yaml.set(base + ".yaw", warp.yaw);
+            yaml.set(base + ".pitch", warp.pitch);
+        }
+        save(yaml, warpFile);
     }
 
     private void saveBack() {

@@ -14,6 +14,7 @@ general:
   reloaded: "<green>配置与语言文件已重新加载。</green>"
   usage-admin: "<gray>用法：<yellow>/basiccmd [reload]</yellow></gray>"
   version: "<gray>{version}</gray>"
+  invalid-page: "<red>页码无效：请输入 1 到 <yellow>{pages}</yellow> 之间的数字。</red>"
 
 home:
   set: "<green>已设置家 <yellow>{home}</yellow>。</green>"
@@ -24,16 +25,31 @@ home:
   invalid-name: "<red>名字不合法：只能用字母、数字、下划线或短横线，最长 16 个字符。</red>"
   teleporting: "<gray>正在传送到家 <yellow>{home}</yellow>……</gray>"
   invalid-world: "<red>家 <yellow>{home}</yellow> 所在的世界已不存在。</red>"
-  list-header: "<aqua>你的家（<yellow>{count}</yellow>/<yellow>{limit}</yellow>）：</aqua>"
+  list-header: "<aqua>你的家（<yellow>{count}</yellow>/<yellow>{limit}</yellow>，第 <yellow>{page}</yellow>/<yellow>{pages}</yellow> 页）：</aqua>"
   list-empty: "<gray>你还没有设置任何家，使用 <yellow>/sethome</yellow> 创建一个。</gray>"
-  list-item: "<gray> - <yellow>{home}</yellow> <dark_gray>({world} {x}, {y}, {z})</dark_gray></gray>"
-  usage-delhome: "<red>用法：<yellow>/delhome &lt;名字&gt;</yellow></red>"
+  list-item: "<gray> - <click:run_command:'/home {home}'><hover:show_text:'点击传送到 {home}'><yellow>{home}</yellow></hover></click> <dark_gray>({world} {x}, {y}, {z})</dark_gray></gray>"
+  usage-delhome: "<red>用法：<yellow>/delhome <名字></yellow></red>"
   cross-world-denied: "<red>家 <yellow>{home}</yellow> 位于其他世界（{world}），当前不允许跨世界传送。</red>"
+
+warp:
+  teleporting: "<gray>正在传送到地标 <yellow>{warp}</yellow>……</gray>"
+  not-found: "<red>找不到地标 <yellow>{warp}</yellow>。</red>"
+  invalid-world: "<red>地标 <yellow>{warp}</yellow> 所在的世界已不存在。</red>"
+  created: "<green>已创建地标 <yellow>{warp}</yellow>。</green>"
+  created-overwrite: "<green>已更新地标 <yellow>{warp}</yellow> 的位置。</green>"
+  deleted: "<green>已删除地标 <yellow>{warp}</yellow>。</green>"
+  invalid-name: "<red>地标名不合法：只能用字母、数字、下划线或短横线，最长 16 个字符。</red>"
+  usage: "<gray>用法：<yellow>/warp <名字></yellow> | <yellow>/warps [页码]</yellow> | <yellow>/setwarp <名字></yellow> | <yellow>/delwarp <名字></yellow></gray>"
+  usage-set: "<red>用法：<yellow>/setwarp <名字></yellow></red>"
+  usage-del: "<red>用法：<yellow>/delwarp <名字></yellow></red>"
+  list-header: "<aqua>全服地标（共 <yellow>{count}</yellow> 个，第 <yellow>{page}</yellow>/<yellow>{pages}</yellow> 页）：</aqua>"
+  list-empty: "<gray>还没有设置任何地标，管理员可以用 <yellow>/setwarp <名字></yellow> 创建。</gray>"
+  list-item: "<gray> - <click:run_command:'/warp {warp}'><hover:show_text:'点击传送到 {warp}'><yellow>{warp}</yellow></hover></click> <dark_gray>({world} {x}, {y}, {z})</dark_gray></gray>"
 
 tpa:
   self: "<red>不能对自己使用该命令。</red>"
-  usage: "<red>用法：<yellow>/tpa &lt;玩家&gt;</yellow></red>"
-  usage-tph: "<red>用法：<yellow>/tph &lt;玩家&gt;</yellow></red>"
+  usage: "<red>用法：<yellow>/tpa <玩家></yellow></red>"
+  usage-tph: "<red>用法：<yellow>/tph <玩家></yellow></red>"
   sent: "<green>已向 <yellow>{player}</yellow> 发送传送请求，等待对方处理。</green>"
   sent-tph: "<green>已请求 <yellow>{player}</yellow> 传送到你身边，等待对方处理。</green>"
   received: "<yellow>{player}</yellow> <green>请求传送到你身边。</green> <click:run_command:'/tpaccept {player}'><hover:show_text:'点击接受'><aqua>[接受]</aqua></hover></click> <click:run_command:'/tpdeny {player}'><hover:show_text:'点击拒绝'><red>[拒绝]</red></hover></click>"
@@ -61,6 +77,8 @@ rtp:
   success: "<green>已随机传送到 <yellow>{x}, {y}, {z}</yellow>（{world}）。</green>"
   failed: "<red>附近找不到安全落点，请稍后再试。</red>"
   blacklisted: "<red>当前世界不允许随机传送。</red>"
+  busy: "<red>你已经在搜索落点了，请稍候。</red>"
+  cancelled: "<red>随机传送已取消：搜索期间你切换了世界。</red>"
 
 spawn:
   teleporting: "<gray>正在传送到世界出生点（{world}）……</gray>"

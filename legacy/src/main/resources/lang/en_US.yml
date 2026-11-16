@@ -1,5 +1,5 @@
 # BasicCmd legacy language file (English)
-# Legacy line uses & color codes (1.7.10 – 1.16.4 has no Adventure / MiniMessage)
+# Legacy line uses & color codes (1.7.10 – 1.18.1 ships the legacy jar)
 # Placeholders use braces, e.g. {player} {home} {seconds}
 
 prefix: "&8[&bBasicCmd&8] &r"
@@ -12,6 +12,7 @@ general:
   reloaded: "&aConfiguration and language files reloaded."
   usage-admin: "&7Usage: &e/basiccmd [reload]"
   version: "&7{version}"
+  invalid-page: "&cInvalid page: enter a number between 1 and &e{pages}&c."
 
 home:
   set: "&aHome &e{home}&a has been set."
@@ -23,10 +24,25 @@ home:
   teleporting: "&7Teleporting to home &e{home}&7..."
   invalid-world: "&cThe world of home &e{home}&c no longer exists."
   cross-world-denied: "&cHome &e{home}&c is in another world ({world}), cross-world teleport is disabled."
-  list-header: "&bYour homes (&e{count}&b/&e{limit}&b):"
+  list-header: "&bYour homes (&e{count}&b/&e{limit}&b, page &e{page}&b/&e{pages}&b):"
   list-empty: "&7You have no homes yet. Use &e/sethome&7 to create one."
   list-item: "&7 - &e{home} &8({world} {x}, {y}, {z})"
   usage-delhome: "&cUsage: &e/delhome <name>"
+
+warp:
+  teleporting: "&7Teleporting to warp &e{warp}&7..."
+  not-found: "&cWarp &e{warp}&c was not found."
+  invalid-world: "&cThe world of warp &e{warp}&c no longer exists."
+  created: "&aWarp &e{warp}&a has been created."
+  created-overwrite: "&aWarp &e{warp}&a has been updated."
+  deleted: "&aWarp &e{warp}&a has been deleted."
+  invalid-name: "&cInvalid name: only letters, digits, underscore and dash, up to 16 characters."
+  usage: "&7Usage: &e/warp <name>&7 | &e/warps [page]&7 | &e/setwarp <name>&7 | &e/delwarp <name>"
+  usage-set: "&cUsage: &e/setwarp <name>"
+  usage-del: "&cUsage: &e/delwarp <name>"
+  list-header: "&bServer warps (&e{count}&b total, page &e{page}&b/&e{pages}&b):"
+  list-empty: "&7No warps yet. An admin can create one with &e/setwarp <name>&7."
+  list-item: "&7 - &e{warp} &8({world} {x}, {y}, {z})"
 
 tpa:
   self: "&cYou cannot use this on yourself."

@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'com.example'
-version = '1.0.0'
+version = '1.1.0'
 
 // 目标服务端版本：./gradlew jar -Pmc=1.21.11（默认 26.3）
 def mc = (findProperty('mc') ?: '26.3').toString()
@@ -59,5 +59,5 @@ processResources {
 
 jar {
     // 命名：插件名-<MC版本>-<平台>-<插件版本>
-    archiveFileName = "BasicCommands-${target.range}-paper-${project.version}.jar"
+    archiveFileName = "BasicCommands-${project.version}-paper-${target.range}.jar"
 }

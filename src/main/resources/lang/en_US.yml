@@ -14,6 +14,7 @@ general:
   reloaded: "<green>Configuration and language files reloaded.</green>"
   usage-admin: "<gray>Usage: <yellow>/basiccmd [reload]</yellow></gray>"
   version: "<gray>{version}</gray>"
+  invalid-page: "<red>Invalid page: enter a number between 1 and <yellow>{pages}</yellow>.</red>"
 
 home:
   set: "<green>Home <yellow>{home}</yellow> has been set.</green>"
@@ -24,16 +25,31 @@ home:
   invalid-name: "<red>Invalid name: only letters, digits, underscore and dash, up to 16 characters.</red>"
   teleporting: "<gray>Teleporting to home <yellow>{home}</yellow>...</gray>"
   invalid-world: "<red>The world of home <yellow>{home}</yellow> no longer exists.</red>"
-  list-header: "<aqua>Your homes (<yellow>{count}</yellow>/<yellow>{limit}</yellow>):</aqua>"
+  list-header: "<aqua>Your homes (<yellow>{count}</yellow>/<yellow>{limit}</yellow>, page <yellow>{page}</yellow>/<yellow>{pages}</yellow>):</aqua>"
   list-empty: "<gray>You have no homes yet. Use <yellow>/sethome</yellow> to create one.</gray>"
-  list-item: "<gray> - <yellow>{home}</yellow> <dark_gray>({world} {x}, {y}, {z})</dark_gray></gray>"
-  usage-delhome: "<red>Usage: <yellow>/delhome &lt;name&gt;</yellow></red>"
+  list-item: "<gray> - <click:run_command:'/home {home}'><hover:show_text:'Click to teleport to {home}'><yellow>{home}</yellow></hover></click> <dark_gray>({world} {x}, {y}, {z})</dark_gray></gray>"
+  usage-delhome: "<red>Usage: <yellow>/delhome <name></yellow></red>"
   cross-world-denied: "<red>Home <yellow>{home}</yellow> is in another world ({world}), cross-world teleport is disabled.</red>"
+
+warp:
+  teleporting: "<gray>Teleporting to warp <yellow>{warp}</yellow>...</gray>"
+  not-found: "<red>Warp <yellow>{warp}</yellow> was not found.</red>"
+  invalid-world: "<red>The world of warp <yellow>{warp}</yellow> no longer exists.</red>"
+  created: "<green>Warp <yellow>{warp}</yellow> has been created.</green>"
+  created-overwrite: "<green>Warp <yellow>{warp}</yellow> has been updated.</green>"
+  deleted: "<green>Warp <yellow>{warp}</yellow> has been deleted.</green>"
+  invalid-name: "<red>Invalid name: only letters, digits, underscore and dash, up to 16 characters.</red>"
+  usage: "<gray>Usage: <yellow>/warp <name></yellow> | <yellow>/warps [page]</yellow> | <yellow>/setwarp <name></yellow> | <yellow>/delwarp <name></yellow></gray>"
+  usage-set: "<red>Usage: <yellow>/setwarp <name></yellow></red>"
+  usage-del: "<red>Usage: <yellow>/delwarp <name></yellow></red>"
+  list-header: "<aqua>Server warps (<yellow>{count}</yellow> total, page <yellow>{page}</yellow>/<yellow>{pages}</yellow>):</aqua>"
+  list-empty: "<gray>No warps yet. An admin can create one with <yellow>/setwarp <name></yellow>.</gray>"
+  list-item: "<gray> - <click:run_command:'/warp {warp}'><hover:show_text:'Click to teleport to {warp}'><yellow>{warp}</yellow></hover></click> <dark_gray>({world} {x}, {y}, {z})</dark_gray></gray>"
 
 tpa:
   self: "<red>You cannot use this on yourself.</red>"
-  usage: "<red>Usage: <yellow>/tpa &lt;player&gt;</yellow></red>"
-  usage-tph: "<red>Usage: <yellow>/tph &lt;player&gt;</yellow></red>"
+  usage: "<red>Usage: <yellow>/tpa <player></yellow></red>"
+  usage-tph: "<red>Usage: <yellow>/tph <player></yellow></red>"
   sent: "<green>Teleport request sent to <yellow>{player}</yellow>.</green>"
   sent-tph: "<green>Requested <yellow>{player}</yellow> to teleport to you.</green>"
   received: "<yellow>{player}</yellow> <green>wants to teleport to you.</green> <click:run_command:'/tpaccept {player}'><hover:show_text:'Click to accept'><aqua>[Accept]</aqua></hover></click> <click:run_command:'/tpdeny {player}'><hover:show_text:'Click to deny'><red>[Deny]</red></hover></click>"
@@ -61,6 +77,8 @@ rtp:
   success: "<green>Teleported to <yellow>{x}, {y}, {z}</yellow> ({world}).</green>"
   failed: "<red>Could not find a safe spot, try again later.</red>"
   blacklisted: "<red>Random teleport is disabled in this world.</red>"
+  busy: "<red>You are already searching for a spot, please wait.</red>"
+  cancelled: "<red>Random teleport cancelled: you changed worlds during the search.</red>"
 
 spawn:
   teleporting: "<gray>Teleporting to the world spawn ({world})...</gray>"

@@ -1,5 +1,5 @@
 # BasicCmd legacy 语言文件（简体中文）
-# legacy 线使用 & 传统色码（1.7.10 – 1.16.4 没有 Adventure / MiniMessage）
+# legacy 线使用 & 传统色码（1.7.10 – 1.18.1 统一走 legacy 包）
 # 占位符用大括号，例如 {player} {home} {seconds}
 
 prefix: "&8[&bBasicCmd&8] &r"
@@ -12,6 +12,7 @@ general:
   reloaded: "&a配置与语言文件已重新加载。"
   usage-admin: "&7用法：&e/basiccmd [reload]"
   version: "&7{version}"
+  invalid-page: "&c页码无效：请输入 1 到 &e{pages}&c 之间的数字。"
 
 home:
   set: "&a已设置家 &e{home}&a。"
@@ -23,10 +24,25 @@ home:
   teleporting: "&7正在传送到家 &e{home}&7……"
   invalid-world: "&c家 &e{home}&c 所在的世界已不存在。"
   cross-world-denied: "&c家 &e{home}&c 位于其他世界（{world}），当前不允许跨世界传送。"
-  list-header: "&b你的家（&e{count}&b/&e{limit}&b）："
+  list-header: "&b你的家（&e{count}&b/&e{limit}&b，第 &e{page}&b/&e{pages}&b 页）："
   list-empty: "&7你还没有设置任何家，使用 &e/sethome&7 创建一个。"
   list-item: "&7 - &e{home} &8({world} {x}, {y}, {z})"
   usage-delhome: "&c用法：&e/delhome <名字>"
+
+warp:
+  teleporting: "&7正在传送到地标 &e{warp}&7……"
+  not-found: "&c找不到地标 &e{warp}&c。"
+  invalid-world: "&c地标 &e{warp}&c 所在的世界已不存在。"
+  created: "&a已创建地标 &e{warp}&a。"
+  created-overwrite: "&a已更新地标 &e{warp}&a 的位置。"
+  deleted: "&a已删除地标 &e{warp}&a。"
+  invalid-name: "&c地标名不合法：只能用字母、数字、下划线或短横线，最长 16 个字符。"
+  usage: "&7用法：&e/warp <名字>&7 | &e/warps [页码]&7 | &e/setwarp <名字>&7 | &e/delwarp <名字>"
+  usage-set: "&c用法：&e/setwarp <名字>"
+  usage-del: "&c用法：&e/delwarp <名字>"
+  list-header: "&b全服地标（共 &e{count}&b 个，第 &e{page}&b/&e{pages}&b 页）："
+  list-empty: "&7还没有设置任何地标，管理员可以用 &e/setwarp <名字>&7 创建。"
+  list-item: "&7 - &e{warp} &8({world} {x}, {y}, {z})"
 
 tpa:
   self: "&c不能对自己使用该命令。"

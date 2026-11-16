@@ -125,6 +125,23 @@ public final class LegacyCommands implements CommandExecutor, TabCompleter {
         return String.format(Locale.ROOT, "%.1f", Double.valueOf(value));
     }
 
+    private static int parsePage(String raw) {
+        try {
+            return Integer.parseInt(raw);
+        } catch (NumberFormatException e) {
+            return -1;
+        }
+    }
+
+    private static List<String> pageNumbers(int pageSize, int count) {
+        List<String> numbers = new ArrayList<String>();
+        int pages = (count + pageSize - 1) / pageSize;
+        for (int i = 1; i <= pages; i++) {
+            numbers.add(String.valueOf(i));
+        }
+        return numbers;
+    }
+
     private static List<String> filter(String prefix, Iterable<String> options) {
         String lower = prefix.toLowerCase(Locale.ROOT);
         List<String> result = new ArrayList<String>();
@@ -162,7 +179,19 @@ public final class LegacyCommands implements CommandExecutor, TabCompleter {
             return home(sender, args);
         }
         if ("homes".equals(name)) {
-            return homes(sender);
+            return homes(sender, args);
+        }
+        if ("warp".equals(name)) {
+            return goWarp(sender, args);
+        }
+        if ("warps".equals(name)) {
+            return warps(sender, args);
+        }
+        if ("setwarp".equals(name)) {
+            return setWarp(sender, args);
+        }
+        if ("delwarp".equals(name)) {
+            return deleteWarp(sender, args);
         }
         if ("tpa".equals(name)) {
             return sendRequest(sender, args, false);
@@ -262,7 +291,7 @@ public final class LegacyCommands implements CommandExecutor, TabCompleter {
         return true;
     }
 
-    private boolean homes(CommandSender sender) {
+    private boolean homes(CommandSender sender, String[] args) {
         Player player = requirePlayer(sender);
         if (player == null || !checkPermission(sender, "homes")) {
             return true;
@@ -272,14 +301,127 @@ public final class LegacyCommands implements CommandExecutor, TabCompleter {
             lang.send(sender, "home.list-empty");
             return true;
         }
+        int pageSize = Math.max(1, plugin.getConfig().getInt("homes.page-size", 8));
+        int pages = (map.size() + pageSize - 1) / pageSize;
+        int page = args.length > 0 ? parsePage(args[0]) : 1;
+        if (page < 1 || page > pages) {
+            lang.send(sender, "general.invalid-page", "pages", Integer.valueOf(pages));
+            return true;
+        }
+        List<LegacyStore.Home> list = new ArrayList<LegacyStore.Home>(map.values());
         lang.send(sender, "home.list-header",
                 "count", Integer.valueOf(map.size()),
-                "limit", Integer.valueOf(plugin.getConfig().getInt("homes.limit", 5)));
-        for (LegacyStore.Home home : map.values()) {
+                "limit", Integer.valueOf(plugin.getConfig().getInt("homes.limit", 5)),
+                "page", Integer.valueOf(page),
+                "pages", Integer.valueOf(pages));
+        int from = (page - 1) * pageSize;
+        int to = Math.min(from + pageSize, list.size());
+        for (int i = from; i < to; i++) {
+            LegacyStore.Home home = list.get(i);
             lang.send(sender, "home.list-item",
                     "home", home.name(),
                     "world", home.world(),
                     "x", format(home.x), "y", format(home.y), "z", format(home.z));
+        }
+        return true;
+    }
+
+    // ------------------------------------------------------------ 地标
+
+    private boolean goWarp(CommandSender sender, String[] args) {
+        Player player = requirePlayer(sender);
+        if (player == null || !checkPermission(sender, "warp") || !cooldownReady(player, "warp")) {
+            return true;
+        }
+        if (args.length == 0) {
+            lang.send(sender, "warp.usage");
+            return true;
+        }
+        String name = args[0].toLowerCase(Locale.ROOT);
+        LegacyStore.Warp warp = store.getWarp(name);
+        if (warp == null) {
+            lang.send(sender, "warp.not-found", "warp", name);
+            return true;
+        }
+        Location destination = warp.toLocation();
+        if (destination == null) {
+            lang.send(sender, "warp.invalid-world", "warp", name);
+            return true;
+        }
+        lang.send(sender, "warp.teleporting", "warp", name);
+        teleports.request(player, destination);
+        startCooldown(player, "warp");
+        return true;
+    }
+
+    private boolean setWarp(CommandSender sender, String[] args) {
+        Player player = requirePlayer(sender);
+        if (player == null || !checkPermission(sender, "setwarp")) {
+            return true;
+        }
+        if (args.length == 0) {
+            lang.send(sender, "warp.usage-set");
+            return true;
+        }
+        String name = args[0].toLowerCase(Locale.ROOT);
+        if (!VALID_NAME.matcher(name).matches()) {
+            lang.send(sender, "warp.invalid-name");
+            return true;
+        }
+        Location location = player.getLocation();
+        boolean overwritten = store.putWarp(new LegacyStore.Warp(name,
+                location.getWorld().getName(),
+                location.getX(), location.getY(), location.getZ(),
+                location.getYaw(), location.getPitch()));
+        lang.send(sender, overwritten ? "warp.created-overwrite" : "warp.created", "warp", name);
+        return true;
+    }
+
+    private boolean deleteWarp(CommandSender sender, String[] args) {
+        if (!checkPermission(sender, "delwarp")) {
+            return true;
+        }
+        if (args.length == 0) {
+            lang.send(sender, "warp.usage-del");
+            return true;
+        }
+        String name = args[0].toLowerCase(Locale.ROOT);
+        if (!store.removeWarp(name)) {
+            lang.send(sender, "warp.not-found", "warp", name);
+            return true;
+        }
+        lang.send(sender, "warp.deleted", "warp", name);
+        return true;
+    }
+
+    private boolean warps(CommandSender sender, String[] args) {
+        if (!checkPermission(sender, "warps")) {
+            return true;
+        }
+        List<LegacyStore.Warp> list = store.warps();
+        if (list.isEmpty()) {
+            lang.send(sender, "warp.list-empty");
+            return true;
+        }
+        int pageSize = Math.max(1, plugin.getConfig().getInt("warps.page-size", 8));
+        int pages = (list.size() + pageSize - 1) / pageSize;
+        int page = args.length > 0 ? parsePage(args[0]) : 1;
+        if (page < 1 || page > pages) {
+            lang.send(sender, "general.invalid-page", "pages", Integer.valueOf(pages));
+            return true;
+        }
+        lang.send(sender, "warp.list-header",
+                "count", Integer.valueOf(list.size()),
+                "page", Integer.valueOf(page),
+                "pages", Integer.valueOf(pages));
+        int from = (page - 1) * pageSize;
+        int to = Math.min(from + pageSize, list.size());
+        for (int i = from; i < to; i++) {
+            LegacyStore.Warp warp = list.get(i);
+            lang.send(sender, "warp.list-item",
+                    "warp", warp.name(),
+                    "world", warp.world(),
+                    "x", format(warp.x()), "y", format(warp.y()), "z", format(warp.z()));
         }
         return true;
     }
@@ -602,6 +744,23 @@ public final class LegacyCommands implements CommandExecutor, TabCompleter {
         String name = command.getName().toLowerCase(Locale.ROOT);
         if ("home".equals(name) || "delhome".equals(name)) {
             return filter(args[0], store.homes(player.getUniqueId()).keySet());
+        }
+        if ("homes".equals(name)) {
+            return filter(args[0], pageNumbers(
+                    Math.max(1, plugin.getConfig().getInt("homes.page-size", 8)),
+                    store.homeCount(player.getUniqueId())));
+        }
+        if ("warp".equals(name) || "delwarp".equals(name)) {
+            List<String> names = new ArrayList<String>();
+            for (LegacyStore.Warp warp : store.warps()) {
+                names.add(warp.name());
+            }
+            return filter(args[0], names);
+        }
+        if ("warps".equals(name)) {
+            return filter(args[0], pageNumbers(
+                    Math.max(1, plugin.getConfig().getInt("warps.page-size", 8)),
+                    store.warpCount()));
         }
         if ("tpa".equals(name) || "tph".equals(name) || "tpaccept".equals(name) || "tpdeny".equals(name)) {
             return filter(args[0], onlineNames());

@@ -1,6 +1,6 @@
 # BasicCommands
 
-Minecraft 基础命令插件：家、TPA/TPH、出生点、返回上一点、随机传送。
+Minecraft 基础命令插件：家、地标、TPA/TPH、出生点、返回上一点、随机传送。
 
 ## 选哪个包
 
@@ -8,12 +8,12 @@ Minecraft 基础命令插件：家、TPA/TPH、出生点、返回上一点、随
 
 | 服务端 | 用这个包 | Java |
 |---|---|---|
-| Spigot / CraftBukkit 1.7.10 – 1.18.1 | `BasicCommands-1.7.10-1.18.1-bukkit-1.0.0.jar` | 8+ |
-| Paper 1.18.2 | `BasicCommands-1.18.2-paper-1.0.0.jar` | 17+ |
-| Paper 1.19 – 1.19.4 | `BasicCommands-1.19-1.19.4-paper-1.0.0.jar` | 17+ |
-| Paper 1.20 – 1.20.6 | `BasicCommands-1.20-1.20.6-paper-1.0.0.jar` | 17+ |
-| Paper 1.21 – 1.21.11 | `BasicCommands-1.21-1.21.11-paper-1.0.0.jar` | 21+ |
-| Paper 26.3 | `BasicCommands-26.3-paper-1.0.0.jar` | 25+ |
+| Spigot / CraftBukkit 1.7.10 – 1.18.1 | `BasicCommands-1.1.0-bukkit-1.7.10-1.18.1.jar` | 8+ |
+| Paper 1.18.2 | `BasicCommands-1.1.0-paper-1.18.2.jar` | 17+ |
+| Paper 1.19 – 1.19.4 | `BasicCommands-1.1.0-paper-1.19-1.19.4.jar` | 17+ |
+| Paper 1.20 – 1.20.6 | `BasicCommands-1.1.0-paper-1.20-1.20.6.jar` | 17+ |
+| Paper 1.21 – 1.21.11 | `BasicCommands-1.1.0-paper-1.21-1.21.11.jar` | 21+ |
+| Paper 26.3 | `BasicCommands-1.1.0-paper-26.3.jar` | 25+ |
 
 安装：把 jar 放进服务端 `plugins/`，重启即可。**只装一个**，不要多个包同时放。
 
@@ -26,8 +26,8 @@ Minecraft 基础命令插件：家、TPA/TPH、出生点、返回上一点、随
 | 消息颜色 | MiniMessage 富文本 | `&` 传统色码 |
 | 聊天栏 `[接受]` `[拒绝]` 按钮 | 有，可点击 | **没有**，玩家手输 `/tpaccept` |
 | hover 提示 | 有 | 没有 |
-| 其余功能（家、tpa、spawn、back、rtp、倒计时、权限、冷却、中英双语） | 完整 | 完整 |
-| 数据文件格式 | `homes.yml` / `back.yml` | **完全相同**，换包不用迁移数据 |
+| 其余功能（家、地标、分页、tpa、spawn、back、rtp、倒计时、权限、冷却、中英双语） | 完整 | 完整 |
+| 数据文件格式 | `homes.yml` / `warps.yml` / `back.yml` | **完全相同**，换包不用迁移数据 |
 
 ## 命令
 
@@ -36,7 +36,11 @@ Minecraft 基础命令插件：家、TPA/TPH、出生点、返回上一点、随
 | `/sethome [名字]` | 设家，默认名 `home`，同名覆盖 | `basiccmd.sethome` | 3s |
 | `/delhome <名字>` | 删家 | `basiccmd.delhome` | — |
 | `/home [名字]` | 传送到家 | `basiccmd.home` | 5s |
-| `/homes` | 列出家与剩余额度 | `basiccmd.homes` | — |
+| `/homes [页码]` | 列出家（每页 8 条，超过自动分页） | `basiccmd.homes` | — |
+| `/warp <名字>` | 传送到地标 | `basiccmd.warp` | 5s |
+| `/warps [页码]` | 列出全服地标（每页 8 条） | `basiccmd.warps` | — |
+| `/setwarp <名字>` | 在当前位置创建地标，同名覆盖 | `basiccmd.setwarp` | — |
+| `/delwarp <名字>` | 删除地标 | `basiccmd.delwarp` | — |
 | `/tpa <玩家>` | 请求传送到对方 | `basiccmd.tpa` | 10s |
 | `/tph <玩家>` | 请求对方传送到你身边 | `basiccmd.tph` | 10s |
 | `/tpaccept [玩家]` | 接受请求（不带参数取最近一条） | `basiccmd.tpa` | — |
@@ -47,7 +51,7 @@ Minecraft 基础命令插件：家、TPA/TPH、出生点、返回上一点、随
 | `/basiccmd` | 显示版本号 | — | — |
 | `/basiccmd reload` | 热加载配置与语言文件 | `basiccmd.reload` | — |
 
-所有命令默认对所有玩家开放。另有 `basiccmd.cooldown.bypass`（op 默认）可跳过冷却。
+除 `/setwarp`、`/delwarp` 默认仅 op 可用外，其余命令默认对所有玩家开放。另有 `basiccmd.cooldown.bypass`（op 默认）可跳过冷却。
 
 传送请求默认 60 秒过期；`/tph` 需要对方同意，可配置成直接拉人。
 
@@ -61,7 +65,17 @@ Minecraft 基础命令插件：家、TPA/TPH、出生点、返回上一点、随
 homes:
   limit: 5             # 所有人的家的上限（不分级）
   cross-world: true    # false = 只能回当前世界的家
+  page-size: 8         # /homes 每页显示几条
 ```
+
+### 地标
+
+```yaml
+warps:
+  page-size: 8         # /warps 每页显示几条
+```
+
+地标是全服共享的，没有数量上限，只有 op 能创建和删除。
 
 ### 传送倒计时
 
@@ -128,6 +142,8 @@ rtp:
 
 没单独配置的世界用 `rtp.default`。
 
+在 Paper 服务端上，找落点是异步的：目标区块在后台加载好之后才判定安全落点，所以玩家不会感到卡顿。同一个玩家同时只能有一个进行中的随机传送。
+
 ## 语言
 
 文本在 `plugins/BasicCommands/lang/zh_CN.yml` 和 `en_US.yml`，改颜色、文案、措辞都在这里，不用动代码。切换语言改 `config.yml` 的 `language` 再 reload。
@@ -141,16 +157,21 @@ rtp:
 | 文件 | 内容 |
 |---|---|
 | `homes.yml` | 每个玩家的家 |
+| `warps.yml` | 全服地标 |
 | `back.yml` | `/back` 的返回点 |
 
-两个文件由插件自动维护，不要手工编辑。写入是异步的，关服时会同步落盘。
+这些文件由插件自动维护，不要手工编辑。写入是异步的，关服时会同步落盘。
 
 ## 常见问题
 
-**换服务端版本后玩家数据还在吗？** 在。所有包的 `homes.yml` / `back.yml` 格式一致，直接拷 `plugins/BasicCommands/` 目录即可。
+**换服务端版本后玩家数据还在吗？** 在。所有包的 `homes.yml` / `warps.yml` / `back.yml` 格式一致，直接拷 `plugins/BasicCommands/` 目录即可。
 
 **倒计时时动了就取消了，能关吗？** 能，`teleport.cancel-on-move: false`。
 
-**`/rtp` 偶尔卡一下？** 找落点时要加载目标区块，属正常现象，60 秒冷却下影响很小。
+**`/rtp` 会不会让服务器卡一下？** Paper 包不会：先在后台加载目标区块，再回主线程判定落点。bukkit 包（1.7.10 – 1.18.1）受限于旧 API 仍是同步找点，冷却 60 秒下影响很小。
 
-**传送请求重启后就没了？** 请求是内存态，重启清空；家与返回点会持久化。
+**家很多、地标很多，列表刷屏怎么办？** 用 `/homes 2`、`/warps 2` 翻页，Tab 也会补页码。
+
+**怎么让别人也能建地标？** 给玩家 `basiccmd.setwarp`、`basiccmd.delwarp` 权限即可，默认只有 op 有。
+
+**传送请求重启后就没了？** 请求是内存态，重启清空；家、地标与返回点会持久化。

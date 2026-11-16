@@ -8,10 +8,12 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.IntStream;
 import java.util.regex.Pattern;
 
 /** /sethome /delhome /home /homes */
@@ -33,7 +35,7 @@ public final class HomeCommand extends BaseCommand {
             case "sethome" -> setHome(sender, args);
             case "delhome" -> deleteHome(sender, args);
             case "home" -> goHome(sender, args);
-            case "homes" -> listHomes(sender);
+            case "homes" -> listHomes(sender, args);
             default -> false;
         };
     }
@@ -111,19 +113,37 @@ public final class HomeCommand extends BaseCommand {
         return true;
     }
 
-    private boolean listHomes(CommandSender sender) {
+    private boolean listHomes(CommandSender sender, String[] args) {
         Player player = requirePlayer(sender);
         if (player == null || !checkPermission(sender, "homes")) {
             return true;
         }
-        Map<String, Home> homes = plugin.homeStore().homes(player.getUniqueId());
+        Map<String, Home> stored = plugin.homeStore().homes(player.getUniqueId());
         int limit = plugin.getConfig().getInt("homes.limit", 5);
-        if (homes.isEmpty()) {
+        if (stored.isEmpty()) {
             lang.send(sender, "home.list-empty");
             return true;
         }
-        lang.send(sender, "home.list-header", "count", homes.size(), "limit", limit);
-        for (Home home : homes.values()) {
+        List<Home> homes = new ArrayList<>(stored.values());
+        int pageSize = Math.max(1, plugin.getConfig().getInt("homes.page-size", 8));
+        int pages = (homes.size() + pageSize - 1) / pageSize;
+        int page = 1;
+        if (args.length > 0) {
+            page = parsePage(args[0]);
+            if (page < 1 || page > pages) {
+                lang.send(sender, "general.invalid-page", "pages", pages);
+                return true;
+            }
+        }
+        lang.send(sender, "home.list-header",
+                "count", homes.size(),
+                "limit", limit,
+                "page", page,
+                "pages", pages);
+        int from = (page - 1) * pageSize;
+        int to = Math.min(homes.size(), from + pageSize);
+        for (int i = from; i < to; i++) {
+            Home home = homes.get(i);
             lang.send(sender, "home.list-item",
                     "home", home.name(),
                     "world", home.world(),
@@ -142,6 +162,14 @@ public final class HomeCommand extends BaseCommand {
         String name = command.getName().toLowerCase(Locale.ROOT);
         if (name.equals("home") || name.equals("delhome")) {
             return filter(args[0], plugin.homeStore().homes(player.getUniqueId()).keySet());
+        }
+        if (name.equals("homes")) {
+            int pageSize = Math.max(1, plugin.getConfig().getInt("homes.page-size", 8));
+            int pages = (plugin.homeStore().count(player.getUniqueId()) + pageSize - 1) / pageSize;
+            if (pages <= 1) {
+                return List.of();
+            }
+            return filter(args[0], IntStream.rangeClosed(1, pages).mapToObj(String::valueOf).toList());
         }
         return List.of();
     }

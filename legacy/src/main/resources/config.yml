@@ -6,6 +6,12 @@ homes:
   limit: 5
   # 是否允许回其他世界的家；false 时只能回当前世界的家
   cross-world: true
+  # /homes 每页显示多少个家
+  page-size: 8
+
+warps:
+  # /warps 每页显示多少个地标
+  page-size: 8
 
 teleport:
   # 传送前倒计时秒数，0 = 立即传送
@@ -59,6 +65,7 @@ rtp:
 cooldowns:
   sethome: 3
   home: 5
+  warp: 5
   tpa: 10
   tph: 10
   rtp: 60

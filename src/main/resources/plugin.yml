@@ -2,8 +2,8 @@ name: BasicCommands
 version: '${version}'
 main: yhjm1208.basiccommands.BasicCommands
 api-version: '${apiVersion}'
-description: 基础命令插件 —— 家、TPA/TPH、spawn、back、随机传送
-authors: [dsh-test]
+description: 基础命令插件 —— 家、地标、TPA/TPH、spawn、back、随机传送
+authors: [YHJM1208]
 
 commands:
   sethome:
@@ -16,8 +16,20 @@ commands:
     description: 传送到家
     usage: /home [名字]
   homes:
-    description: 列出所有家
-    usage: /homes
+    description: 列出所有家（支持分页）
+    usage: /homes [页码]
+  warp:
+    description: 传送到地标
+    usage: /warp <名字>
+  warps:
+    description: 列出所有地标（支持分页）
+    usage: /warps [页码]
+  setwarp:
+    description: 创建一个地标
+    usage: /setwarp <名字>
+  delwarp:
+    description: 删除一个地标
+    usage: /delwarp <名字>
   tpa:
     description: 请求传送到某位玩家
     usage: /tpa <玩家>
@@ -56,6 +68,18 @@ permissions:
   basiccmd.homes:
     description: 允许 /homes
     default: true
+  basiccmd.warp:
+    description: 允许 /warp
+    default: true
+  basiccmd.warps:
+    description: 允许 /warps
+    default: true
+  basiccmd.setwarp:
+    description: 允许 /setwarp
+    default: op
+  basiccmd.delwarp:
+    description: 允许 /delwarp
+    default: op
   basiccmd.tpa:
     description: 允许 /tpa
     default: true

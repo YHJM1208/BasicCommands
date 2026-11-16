@@ -8,9 +8,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
-/** /rtp */
+/** /rtp：异步找落点，找完再传送。 */
 public final class RtpCommand extends BaseCommand {
+
+    /** 正在搜索中的玩家，防止连点 /rtp 同时开多路区块加载。 */
+    private final Set<UUID> searching = ConcurrentHashMap.newKeySet();
 
     public RtpCommand(BasicCommands plugin) {
         super(plugin);
@@ -32,28 +38,47 @@ public final class RtpCommand extends BaseCommand {
             lang.send(sender, "rtp.blacklisted");
             return true;
         }
-
-        lang.send(sender, "rtp.searching");
-        int[] range = resolveRange(world);
-        Location target = plugin.rtpFinder().find(
-                world,
-                range[0],
-                range[1],
-                plugin.getConfig().getInt("rtp.max-attempts", 16));
-
-        if (target == null) {
-            lang.send(sender, "rtp.failed");
+        if (!searching.add(player.getUniqueId())) {
+            lang.send(sender, "rtp.busy");
             return true;
         }
 
-        lang.send(sender, "rtp.success",
+        lang.send(sender, "rtp.searching");
+        int[] range = resolveRange(world);
+        plugin.rtpFinder().findAsync(world, range[0], range[1],
+                        plugin.getConfig().getInt("rtp.max-attempts", 16))
+                .whenComplete((target, error) -> {
+                    try {
+                        plugin.getServer().getScheduler()
+                                .runTask(plugin, () -> finish(player, world, target, error));
+                    } catch (RuntimeException e) {
+                        // 关服过程中调度器已关闭，静默收尾即可
+                        searching.remove(player.getUniqueId());
+                    }
+                });
+        return true;
+    }
+
+    private void finish(Player player, World world, Location target, Throwable error) {
+        searching.remove(player.getUniqueId());
+        if (!player.isOnline()) {
+            return;
+        }
+        if (player.getWorld() != world) {
+            lang.send(player, "rtp.cancelled");
+            return;
+        }
+        if (error != null || target == null) {
+            lang.send(player, "rtp.failed");
+            return;
+        }
+        lang.send(player, "rtp.success",
                 "x", target.getBlockX(),
                 "y", target.getBlockY(),
                 "z", target.getBlockZ(),
                 "world", world.getName());
         plugin.teleports().request(player, target);
         startCooldown(player, "rtp");
-        return true;
     }
 
     @Override

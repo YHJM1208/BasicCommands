@@ -3,11 +3,12 @@ package yhjm1208.basiccommands.legacy;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
-/** legacy 主类：一套代码覆盖 1.7.10 – 1.16.4（Spigot/Bukkit API，Java 8）。 */
+/** legacy 主类：一套代码覆盖 1.7.10 – 1.18.1（Spigot/Bukkit API，Java 8）。 */
 public final class LegacyPlugin extends JavaPlugin {
 
     private static final String[] COMMANDS = {
             "sethome", "delhome", "home", "homes",
+            "warp", "warps", "setwarp", "delwarp",
             "tpa", "tph", "tpaccept", "tpdeny",
             "spawn", "back", "rtp", "basiccmd"
     };

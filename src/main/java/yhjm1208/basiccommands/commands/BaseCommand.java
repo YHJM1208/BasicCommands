@@ -84,6 +84,15 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
         return String.format(Locale.ROOT, "%.1f", value);
     }
 
+    /** 解析分页参数，非法时返回 -1，由调用方统一提示。 */
+    protected static int parsePage(String raw) {
+        try {
+            return Integer.parseInt(raw);
+        } catch (NumberFormatException e) {
+            return -1;
+        }
+    }
+
     protected static List<String> filter(String prefix, Collection<String> options) {
         String lower = prefix.toLowerCase(Locale.ROOT);
         return options.stream()
